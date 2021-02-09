@@ -1,0 +1,14 @@
+{% extends "base.html"%}
+{% block content %}
+<div>
+    <a href='{{url('/create')}}'>
+        <button>create</button>
+    </a>
+    {% for repo in repos %}
+        <a href='{{url('/' + repo.name)}}'>
+            <div>{{repo.name}}</div>
+            <div>{{repo.owner.name}}</div>
+        </a>
+    {% endfor %}
+</div>
+{% endblock %}

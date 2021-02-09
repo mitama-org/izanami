@@ -1,0 +1,21 @@
+{% extends "base.html"%}
+{% block content %}
+<div>
+    <form method='POST'>
+        <dl>
+            <dt>リポジトリ名</dt>
+            <dd><input type='text' name='name' value='{{post.name}}'/></dd>
+            <dt>オーナー</dt>
+            <dd>
+                <select name='owner'>
+                {% for node in nodes %}
+                    <option value='{{node._id}}' {% if node._id == post.owner %}selected{% endif %}>{{node.name}}</option>
+                {% endfor %}
+                </select>
+            </dd>
+        </dl>
+        <p>{{error}}</p>
+        <button>作成</button>
+    </form>
+</div>
+{% endblock %}
