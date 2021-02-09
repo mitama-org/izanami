@@ -7,8 +7,8 @@ from .controller import RepoController, ProxyController
 
 
 class App(App):
-    # name = 'MyApp'
-    # description = 'This is my App.'
+    name = 'Izanami'
+    description = 'Git server for Mitama.'
     router = Router(
         [
             Router([
