@@ -1,0 +1,34 @@
+{% extends "repo/base.html"%}
+{% block repo %}
+    <ul class='nav nav-tabs mt-3 mb-3'>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name) }}'>コード</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link active' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
+        </li>
+    </ul>
+    <h4 class='mb-4'>{{ commit.message }}</h4>
+    {% if diff %}
+    {% for obj in diff %}
+    <div class='card'>
+        <div class='card-body'>
+            <h5 class='card-title'>{{ obj.a_path }}</h5>
+            <div class='diff mt-3'>
+                <div>
+                    <pre>{{ obj.a_blob.data_stream.read().decode() }}</pre>
+                </div>
+                <div>
+                    <pre>{{ obj.b_blob.data_stream.read().decode() }}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>表示する差分はありません</p>
+    {% endif %}
+{% endblock %}

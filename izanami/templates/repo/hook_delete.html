@@ -1,0 +1,21 @@
+{% extends "repo/base.html"%}
+{% block repo %}
+    <ul class='nav nav-tabs mt-3 mb-3'>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name) }}'>コード</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link active' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
+        </li>
+    </ul>
+    <form method="POST">
+        <h4>{{ hook }}</h4>
+        <p>このフックを削除しますか？</p>
+        <a href='{{ url('/' + repo.name + '/hook') }}' class='btn btn-secondary'>キャンセル</a>
+        {{ forms.csrf(request) }}
+        <button class='btn btn-danger'>削除する</button>
+    </form>
+{% endblock %}

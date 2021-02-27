@@ -1,0 +1,29 @@
+{% extends "repo/base.html"%}
+{% block repo %}
+{% set post = request.post() %}
+    <ul class='nav nav-tabs mt-3 mb-3'>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name) }}'>コード</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link active' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
+        </li>
+    </ul>
+    <h4 class='mt-4 mb-3'>フックを作成</h4>
+    <form method='POST'>
+        <div class='mb-3'>
+            <label class='form-label'>フック名</label>
+            <input class='form-control' name='name' value='{{ post.name }}'/>
+        </div>
+        <div class='mb-3'>
+            <label class='form-label'>コード</label>
+            <textarea class='form-control' rows='20' name='code'>{{ post.code }}</textarea>
+        </div>
+        <p>{{ error }}</p>
+        {{ forms.csrf(request) }}
+        <button class='btn btn-primary'>作成</button>
+    </form>
+{% endblock %}

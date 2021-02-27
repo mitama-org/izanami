@@ -1,0 +1,20 @@
+{% extends "base.html"%}
+{% block content %}
+{% set post = request.post() %}
+<div class='container mt-4 mb-3'>
+    <h2 class='mt-3 mb-3'>フックを作成</h2>
+    <form method='POST'>
+        <div class='mt-3'>
+            <label class='form-label'>フック名</label>
+            <input class='form-control' name='name' value='{{ post.name }}'/>
+        </div>
+        <div class='mt-4'>
+            <label class='form-label'>コード</label>
+            <textarea class='form-control' rows='20' name='code'>{{ post.code }}</textarea>
+        </div>
+        <p>{{ error }}</p>
+        {{ forms.csrf(request) }}
+        <button class='btn btn-primary'>作成</button>
+    </form>
+</div>
+{% endblock %}

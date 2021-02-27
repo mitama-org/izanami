@@ -1,21 +1,22 @@
 {% extends "base.html"%}
 {% block content %}
-<div>
+<div class='container mt-4 mb-3'>
     <form method='POST'>
-        <dl>
-            <dt>リポジトリ名</dt>
-            <dd><input type='text' name='name' value='{{post.name}}'/></dd>
-            <dt>オーナー</dt>
-            <dd>
-                <select name='owner'>
-                {% for node in nodes %}
-                    <option value='{{node._id}}' {% if node._id == post.owner %}selected{% endif %}>{{node.name}}</option>
-                {% endfor %}
-                </select>
-            </dd>
-        </dl>
+        <div class='mb-3'>
+            <label class='form-label'>リポジトリ名</label>
+            <input type='text' name='name' class='form-control' value='{{post.name}}'/>
+        </div>
+        <div class='mb-3'>
+            <label class='form-label'>オーナー</label>
+            <select class='form-select' name='owner'>
+            {% for node in nodes %}
+                <option value='{{node._id}}' {% if node._id == post.owner %}selected{% endif %}>{{node.name}}</option>
+            {% endfor %}
+            </select>
+        </div>
         <p>{{error}}</p>
-        <button>作成</button>
+        {{ forms.csrf(request) }}
+        <button class='btn btn-primary'>作成</button>
     </form>
 </div>
 {% endblock %}

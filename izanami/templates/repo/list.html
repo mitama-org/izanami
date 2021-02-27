@@ -1,14 +1,19 @@
 {% extends "base.html"%}
 {% block content %}
-<div>
-    <a href='{{url('/create')}}'>
-        <button>create</button>
-    </a>
+<div class='container mt-4 mb-4'>
+    <div class='mb-3 d-flex justify-content-between'>
+        <a href='{{url('/create')}}' class='btn btn-primary'>リポジトリを作成</a>
+        <a href='{{url('/hook')}}' class='btn btn-primary'>フックの設定</a>
+    </div>
+    <div style='display: grid; grid-gap: 16px; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr))'>
     {% for repo in repos %}
-        <a href='{{url('/' + repo.name)}}'>
-            <div>{{repo.name}}</div>
-            <div>{{repo.owner.name}}</div>
+        <a href='{{url('/' + repo.name)}}' class='card'>
+            <div class='card-body'>
+                <h5 class='card-title'>{{repo.name}}</h5>
+                <h6 class='card-subtitle'>{{repo.owner.name}}</h6>
+            </div>
         </a>
     {% endfor %}
+    </div>
 </div>
 {% endblock %}

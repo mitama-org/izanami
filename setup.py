@@ -6,6 +6,8 @@ setup(
     name="izanami",
     install_requires=[
         "mitama",
+        "docker",
+        "invode",
         "GitPython"
     ],
     extra_requires={"develop": ["unittest", "flake8", "isort", "black"]},
