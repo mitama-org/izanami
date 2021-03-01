@@ -8,14 +8,30 @@
             <a class='nav-link active' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
         </li>
         <li class='nav-item'>
-            <a class='nav-link' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/merge') }}'>マージ</a>
         </li>
     </ul>
+    <div class='d-flex justify-content-between'>
+        <div class='dropdown'>
+            <button class='btn btn-secondary dropdown-toggle' type='button' id='dropdownMenuButton' data-bs-toggle='dropdown' aria-expanded='false'>{{ current_head }}</button>
+            <ul class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                {% for head in entity.heads %}
+                <li><a href='{{ url('/' + repo.name + '/tree/' + head|string) }}' class='dropdown-item'>{{ head }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class='input-group mb-4' style='max-width: 300px'>
+            <span class='input-group-text'>リポジトリURL</span>
+            <input type='text' class='form-control' value='{{ fullurl(request, '/' + repo.name + '.git') }}' readonly />
+        </div>
+    </div>
     <ul class='list-group'>
-        {% for obj in entity.iter_commits() %}
+        {% if head %}
+        {% for obj in head.iter_commits() %}
         <li class='list-group-item'>
             <a href='{{ url('/' + repo.name + '/commit/' + obj|string) }}'>{{ obj.message }}<div class='ms-auto' style='font-size:0.7rem'>{{obj|string}}</div></a>
         </li>
         {% endfor %}
+        {% endif %}
     </ul>
 {% endblock %}

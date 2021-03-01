@@ -8,14 +8,14 @@
             <a class='nav-link' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
         </li>
         <li class='nav-item'>
-            <a class='nav-link' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/merge') }}'>マージ</a>
         </li>
     </ul>
     <div class='card'>
         <div class='card-body'>
-            <h5 class='card-title'>{{ obj.name }}</h5>
+            <h5 class='card-title'>{{ name }}</h5>
             <div>
-                <pre>{{ content }}</pre>
+                <pre><code>{{ content }}</code></pre>
             </div>
         </div>
     </div>

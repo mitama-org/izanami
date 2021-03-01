@@ -1,6 +1,37 @@
 {% extends "base/plain" %}
 {% block head %}
 <link rel='stylesheet' href='{{ url('/static/style.css') }}' />
+<link rel='stylesheet' href='{{ url('/static/highlight/default.css') }}' />
+<script src='{{ url('/static/highlight.pack.js') }}'></script>
+<script src='{{ url('/static/highlightjs-line-numbers.min.js') }}'></script>
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+<style>
+/* for block of numbers */
+.hljs-ln-numbers {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    text-align: center;
+    color: #ccc;
+    border-right: 1px solid #CCC;
+    vertical-align: top;
+    padding-right: 5px;
+
+    /* your custom style here */
+}
+
+/* for block of code */
+.hljs-ln-code {
+    padding-left: 10px;
+}
+</style>
 {% endblock %}
 {% block body %}
 <header class='navbar'>

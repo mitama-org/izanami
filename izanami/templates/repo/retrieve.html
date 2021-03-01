@@ -8,7 +8,7 @@
             <a class='nav-link' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
         </li>
         <li class='nav-item'>
-            <a class='nav-link' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/merge') }}'>マージ</a>
         </li>
     </ul>
     <div class='d-flex justify-content-between'>
@@ -25,7 +25,7 @@
             <input type='text' class='form-control' value='{{ fullurl(request, '/' + repo.name + '.git') }}' readonly />
         </div>
     </div>
-    <ul class='list-group'>
+    <ul class='list-group mb-3'>
         {% if tree %}
         {% for obj in tree %}
         <li class='list-group-item'>
@@ -34,4 +34,11 @@
         {% endfor %}
         {% endif %}
     </ul>
+    {% if readme %}
+    <div class='card'>
+        <div class='card-body'>
+            {{ readme|markdown }}
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}

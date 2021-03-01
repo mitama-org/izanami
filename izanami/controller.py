@@ -1,7 +1,7 @@
 from mitama.app import Controller
 from mitama.app.http import Response
 from mitama.models import User, Group
-from .model import Repo
+from .model import Repo, Merge
 from .forms import HookUpdateForm, HookCreateForm
 from . import gitHttpBackend
 
@@ -9,6 +9,9 @@ import git
 import os
 import glob
 import shutil
+import yaml
+from io import StringIO
+from unidiff import PatchSet
 
 
 class RepoController(Controller):
@@ -54,6 +57,7 @@ class RepoController(Controller):
             'post': dict(),
             'nodes': nodes
         })
+
     def update(self, request):
         template = self.view.get_template("repo/update.html")
         repo = Repo.retrieve(name = request.params['repo'])
@@ -77,6 +81,7 @@ class RepoController(Controller):
         return Response.render(template, {
             'repo': repo
         })
+
     def delete(self, request):
         template = self.view.get_template("repo/delete.html")
         repo = Repo.retrieve(name = request.params['repo'])
@@ -96,6 +101,7 @@ class RepoController(Controller):
         return Response.render(template, {
             'repo': repo
         })
+
     def retrieve(self, request):
         template = self.view.get_template("repo/retrieve.html")
         repo = Repo.retrieve(name = request.params['repo'])
@@ -105,14 +111,26 @@ class RepoController(Controller):
             self.app.project_dir / 'repos/{}.git'.format(repo.name),
         )
         head = getattr(entity.heads, current_head) if hasattr(entity.heads, current_head) else None
-        tree = head.commit.tree or None
+        commit = None
+        tree = None
+        readme = None
+        if head:
+            commit = head.commit
+            if commit:
+                tree = commit.tree
+                if tree:
+                    for blob in tree:
+                        if blob.name.startswith('README'):
+                            readme = blob.data_stream.read().decode('utf-8')
         return Response.render(template, {
             'repo': repo,
             'current_head': current_head,
             'head': head,
             'tree': tree,
-            'entity': entity
+            'entity': entity,
+            'readme': readme
         })
+
     def blob(self, request):
         template = self.view.get_template("repo/blob.html")
         repo = Repo.retrieve(name = request.params['repo'])
@@ -133,7 +151,7 @@ class RepoController(Controller):
             'head': head,
             'tree': tree,
             'entity': entity,
-            'obj': obj,
+            'name': request.params['object'],
             'content': content
         })
 
@@ -143,184 +161,75 @@ class RepoController(Controller):
         query = request.query
         entity = repo.entity
         commit = entity.commit(request.params['commit'])
-        diff = commit.parents[0].diff(commit, create_patch=True) if len(commit.parents) > 0 else None
-
+        diff_str = entity.git.diff(str(commit) + '~1', commit, ignore_blank_lines=True, ignore_space_at_eol=True) if len(commit.parents) > 0 else None
+        diff = None
+        if diff_str:
+            diff = PatchSet(diff_str)
+            for patch in diff:
+                for hunk in patch:
+                    print(dir(hunk))
         return Response.render(template, {
             'repo': repo,
             'entity': entity,
             'commit': commit,
             'diff': diff
         })
+
     def log(self, request):
         template = self.view.get_template("repo/log.html")
         repo = Repo.retrieve(name = request.params['repo'])
+        current_head = request.params.get('head', 'master')
         query = request.query
+        head = getattr(repo.entity.heads, current_head) if hasattr(repo.entity.heads, current_head) else None
         return Response.render(template, {
             'repo': repo,
             'entity': repo.entity,
-        })
-    def hook_list(self, request):
-        template = self.view.get_template("repo/hook_list.html")
-        repo = Repo.retrieve(name = request.params['repo'])
-        hooks = glob.glob(str(self.app.project_dir / 'repos/{}.git/hooks'.format(repo.name)) + '/*')
-        return Response.render(template, {
-            'hooks': [os.path.basename(hook) for hook in hooks],
-            'repo': repo
-        })
-    def hook_retrieve(self, request):
-        template = self.view.get_template("repo/hook_retrieve.html")
-        repo = Repo.retrieve(name = request.params['repo'])
-        with open(self.app.project_dir / ('repos/' + repo.name + '.git/hooks/' + request.params['hook'])) as f:
-            content = f.read()
-        return Response.render(template, {
-            "hook": request.params["hook"],
-            "repo": repo,
-            "content": content
-        })
-    def hook_create(self, request):
-        template = self.view.get_template("repo/hook_create.html")
-        repo = Repo.retrieve(name = request.params['repo'])
-        error = ''
-        if request.method == "POST":
-            post = request.post()
-            try:
-                form = HookCreateForm(post)
-                name = form['name']
-                content = form['code']
-                with open(self.app.project_dir / ('repos/' + repo.name + '.git/hooks/' + name), 'w') as f:
-                    f.write(content)
-                return Response.redirect(self.app.convert_url(repo.name + '/hook/' + name))
-            except Exception as err:
-                error = str(err)
-        return Response.render(template, {
-            "repo": repo,
-            "error": error,
-        })
-    def hook_update(self, request):
-        template = self.view.get_template("repo/hook_update.html")
-        repo = Repo.retrieve(name = request.params['repo'])
-        with open(self.app.project_dir / ('repos/' + repo.name + '.git/hooks/' + request.params['hook'])) as f:
-            content = f.read()
-        error = ''
-        if request.method == "POST":
-            post = request.post()
-            try:
-                form = HookUpdateForm(post)
-                name = form['name']
-                content = form['code']
-                shutil.move(
-                    self.app.project_dir / ('repos/' + repo.name + '.git/hooks/' + request.params['hook']),
-                    self.app.project_dir / ('repos/' + repo.name + '.git/hooks/' + name)
-                )
-                with open(self.app.project_dir / ('repos/' + repo.name + '.git/hooks/' + name), 'w') as f:
-                    f.write(content)
-                error = '保存しました'
-                return Response.redirect(self.app.convert_url(request.params['repo'] + '/hook/' + name + '/edit'))
-            except Exception as err:
-                content = post.get('content', content)
-                error = str(err)
-        return Response.render(template, {
-            "repo": repo,
-            "hook": request.params["hook"],
-            "content": content,
-            "error": error
-        })
-    def hook_delete(self, request):
-        template = self.view.get_template("repo/hook_delete.html")
-        repo = Repo.retrieve(name = request.params['repo'])
-        error = ''
-        if request.method == "POST":
-            try:
-                os.remove(self.app.project_dir / ('repos/' + repo.name + '.git/hooks/' + request.params['hook']))
-                return Response.redirect(self.app.convert_url(request.params['repo'] + '/hook'))
-            except Exception as err:
-                error = str(err)
-        return Response.render(template, {
-            "hook": request.params["hook"],
-            "repo": repo,
-            "error": error
+            'current_head': current_head,
+            'head': head
         })
 
-class HookController(Controller):
+class MergeController(Controller):
     def handle(self, request):
-        template = self.view.get_template("hook/list.html")
-        if not (self.app.project_dir / 'git_template').is_dir:
-            git.Repo.init(
-                self.app.project_dir / 'git_template',
-                bare = True
-            )
-        hooks = glob.glob(str(self.app.project_dir / 'git_template/hooks') + '/*')
+        template = self.view.get_template('merge/list.html')
+        repo = Repo.retrieve(name = request.params['repo'])
+        merges = Merge.query.filter(Merge.repo == repo).all()
         return Response.render(template, {
-            'hooks': [os.path.basename(hook) for hook in hooks]
+            "repo": repo,
+            "merges": merges
         })
-    def retrieve(self, request):
-        template = self.view.get_template("hook/retrieve.html")
-        with open(self.app.project_dir / ('git_template/hooks/' + request.params['hook'])) as f:
-            content = f.read()
-        return Response.render(template, {
-            "hook": request.params["hook"],
-            "content": content
-        })
+
     def create(self, request):
-        template = self.view.get_template("hook/create.html")
-        error = ''
+        template = self.view.get_template('merge/create.html')
+        repo = Repo.retrieve(name = request.params['repo'])
+        error = ""
         if request.method == "POST":
-            post = request.post()
             try:
-                form = HookCreateForm(post)
-                name = form['name']
-                content = form['code']
-                with open(self.app.project_dir / ('git_template/hooks/' + name), 'w') as f:
-                    f.write(content)
-                error = '保存しました'
-                return Response.redirect(self.app.convert_url('/hook/' + name))
+                form = MergeCreateForm(request.post())
+                merge = Merge()
+                merge.base = form['base']
+                merge.compare = form['compare']
+                merge.title = form['title']
+                merge.body = form['body']
+                merge.repo = repo
+                merge.create()
+                return Response.redirect(self.app.convert_url('/' + repo.name + '/merge/' + merge._id))
             except Exception as err:
                 error = str(err)
         return Response.render(template, {
-            "error": error
-        })
-    def update(self, request):
-        template = self.view.get_template("hook/update.html")
-        name = request.params['hook']
-        with open(self.app.project_dir / ('git_template/hooks/' + name)) as f:
-            content = f.read()
-        error = ''
-        if request.method == "POST":
-            post = request.post()
-            try:
-                form = HookUpdateForm(post)
-                name = form['name']
-                content = form['code']
-                shutil.move(
-                    self.app.project_dir / ('git_template/hooks/' + request.params['hook']),
-                    self.app.project_dir / ('git_template/hooks/' + name)
-                )
-                with open(self.app.project_dir / ('git_template/hooks/' + name), 'w') as f:
-                    f.write(content)
-                error = '保存しました'
-                return Response.redirect(self.app.convert_url('/hook/' + name + '/edit'))
-            except Exception as err:
-                content = post.get('content', content)
-                error = str(err)
-        return Response.render(template, {
-            "hook": name,
-            "content": content,
-            "error": error
-        })
-    def delete(self, request):
-        template = self.view.get_template("hook/delete.html")
-        error = ''
-        if request.method == "POST":
-            try:
-                os.remove(self.app.project_dir / ('git_template/hooks/' + request.params['hook']))
-                return Response.redirect(self.app.convert_url('/hook'))
-            except Exception as err:
-                error = str(err)
-        return Response.render(template, {
-            "hook": request.params['hook'],
+            "repo": repo,
+            "entity": repo.entity,
             "error": error
         })
 
+    def retrieve(self, request):
+        template = self.view.get_template('merge/retrieve.html')
+        repo = Repo.retrieve(name = request.params['repo'])
+        merge = Merge.retrieve(request.params['merge'])
+        return Response.render(template, {
+            "repo": repo,
+            "entity": repo.entity,
+            "merge": merge
+        })
 
 class ProxyController(Controller):
     def handle(self, request):

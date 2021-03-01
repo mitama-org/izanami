@@ -7,24 +7,36 @@
         <li class='nav-item'>
             <a class='nav-link active' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
         </li>
-        <li class='nav-item'>
-            <a class='nav-link' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
-        </li>
     </ul>
     <h4 class='mb-4'>{{ commit.message }}</h4>
     {% if diff %}
-    {% for obj in diff %}
-    <div class='card'>
+    {% for patch in diff %}
+    <div class='card mb-3'>
         <div class='card-body'>
-            <h5 class='card-title'>{{ obj.a_path }}</h5>
-            <div class='diff mt-3'>
-                <div>
-                    <pre>{{ obj.a_blob.data_stream.read().decode() }}</pre>
-                </div>
-                <div>
-                    <pre>{{ obj.b_blob.data_stream.read().decode() }}</pre>
+            <h5 class='card-title'>{{ patch.path }}</h5>
+            {% for hunk in patch %}
+            <div class='card mb-3'>
+                <div class='card-body'>
+                    <h6 class='card-title'>@@ -{{ hunk.source_start }},{{ hunk.source_length }} +{{ hunk.target_start }},{{ hunk.target_length }} @@</h6>
+                    <div class='diff mt-3'>
+                        <div class='source'>
+                            {% if hunk.source %}
+                            <pre class='mb-0 mt-0'><code class='diff' data-ln-start-from='{{ hunk.source_start }}'>{{ hunk.source | join('')}}</code></pre>
+                            {% else %}
+                            <div class='d-flex justify-content-center align-items-center' style='height:100%'>No data</div>
+                            {% endif %}
+                        </div>
+                        <div class='target'>
+                            {% if hunk.target %}
+                            <pre class='mb-0 mt-0'><code class='diff' data-ln-start-from='{{ hunk.target_start }}'>{{ hunk.target | join('') }}</code></pre>
+                            {% else %}
+                            <div class='d-flex justify-content-center align-items-center' style='height:100%'>No data</div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
     </div>
     {% endfor %}

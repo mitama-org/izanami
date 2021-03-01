@@ -1,0 +1,48 @@
+{% extends "repo/base.html" %}
+{% block repo %}
+    <ul class='nav nav-tabs mt-3 mb-3'>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name) }}'>コード</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link active' href='{{ url('/' + repo.name + '/merge') }}'>マージ</a>
+        </li>
+    </ul>
+    <form method='POST'>
+        <div class='container'>
+            <div class='row'>
+                <div class='mb-3 col-5'>
+                    <label class='form-label'>ベース</label>
+                    <select class='form-select' name='base'>
+                        {% for head in entity.heads %}
+                        <option value='{{ head }}'>{{ head }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class='col-1 d-flex justify-content-center align-items-center'>
+                ←
+                </div>
+                <div class='mb-3 col-5'>
+                    <label class='form-label'>マージ対象</label>
+                    <select class='form-select' name='compare'>
+                        {% for head in entity.heads %}
+                        <option value='{{ head }}'>{{ head }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class='mb-3'>
+            <label class='form-label'>要約</label>
+            <input type='text' name='title' class='form-control'/>
+        </div>
+        <div class='mb-3'>
+            <label class='form-label'>メッセージ</label>
+            <textarea name='message' class='form-control' rows='20'></textarea>
+        </div>
+        <button class='btn btn-primary'>投稿</button>
+    </form>
+{% endblock %}

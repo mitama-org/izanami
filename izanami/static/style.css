@@ -2,3 +2,9 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
+
+.diff .source,
+.diff .target{
+    overflow: scroll;
+    max-height: 320px;
+}

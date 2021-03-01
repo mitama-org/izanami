@@ -3,13 +3,15 @@ from mitama.utils.controllers import static_files
 from mitama.utils.middlewares import BasicMiddleware, SessionMiddleware, CsrfMiddleware
 from mitama.app.method import view
 
-from .controller import RepoController, ProxyController, HookController
-from .model import Repo
+#from .controller import RepoController, ProxyController, HookController
+from .controller import RepoController, ProxyController, MergeController
+from .model import Repo, Merge
 
 
 class App(App):
     name = 'Izanami'
     description = 'Git server for Mitama.'
+    merge = [Repo, Merge]
     router = Router(
         [
             view("/static/<path:path>", static_files()),
@@ -19,23 +21,27 @@ class App(App):
             Router([
                 view("/", RepoController),
                 view("/create", RepoController, 'create'),
-                view("/hook", HookController),
-                view("/hook/create", HookController, 'create'),
-                view("/hook/<hook>", HookController, 'retrieve'),
-                view("/hook/<hook>/edit", HookController, 'update'),
-                view("/hook/<hook>/delete", HookController, 'delete'),
+                #view("/hook", HookController),
+                #view("/hook/create", HookController, 'create'),
+                #view("/hook/<hook>", HookController, 'retrieve'),
+                #view("/hook/<hook>/edit", HookController, 'update'),
+                #view("/hook/<hook>/delete", HookController, 'delete'),
                 view("/<repo>", RepoController, 'retrieve'),
-                view("/<repo>/hook", RepoController, 'hook_list'),
-                view("/<repo>/hook/create", RepoController, 'hook_create'),
-                view("/<repo>/hook/<hook>", RepoController, 'hook_retrieve'),
-                view("/<repo>/hook/<hook>/edit", RepoController, 'hook_update'),
-                view("/<repo>/hook/<hook>/delete", RepoController, 'hook_delete'),
+                #view("/<repo>/hook", RepoController, 'hook_list'),
+                #view("/<repo>/hook/create", RepoController, 'hook_create'),
+                #view("/<repo>/hook/<hook>", RepoController, 'hook_retrieve'),
+                #view("/<repo>/hook/<hook>/edit", RepoController, 'hook_update'),
+                #view("/<repo>/hook/<hook>/delete", RepoController, 'hook_delete'),
                 view("/<repo>/update", RepoController, 'update'),
                 view("/<repo>/delete", RepoController, 'delete'),
                 view("/<repo>/tree/<head>", RepoController, 'retrieve'),
                 view("/<repo>/blob/<head>/<object>", RepoController, 'blob'),
                 view("/<repo>/commit/<commit>", RepoController, 'commit'),
                 view("/<repo>/log", RepoController, 'log'),
+                view("/<repo>/log/<head>", RepoController, 'log'),
+                view("/<repo>/merge", MergeController),
+                view("/<repo>/merge/create", MergeController, 'create'),
+                view("/<repo>/merge/<merge>", MergeController, 'retrieve'),
             ], middlewares = [SessionMiddleware, CsrfMiddleware])
         ]
     )
