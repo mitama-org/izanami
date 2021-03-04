@@ -10,13 +10,16 @@
         <li class='nav-item'>
             <a class='nav-link' href='{{ url('/' + repo.name + '/merge') }}'>マージ</a>
         </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
+        </li>
     </ul>
     <div class='d-flex justify-content-between'>
         <div class='dropdown'>
             <button class='btn btn-secondary dropdown-toggle' type='button' id='dropdownMenuButton' data-bs-toggle='dropdown' aria-expanded='false'>{{ current_head }}</button>
             <ul class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
                 {% for head in entity.heads %}
-                <li><a href='{{ url('/' + repo.name + '/tree/' + head|string) }}' class='dropdown-item'>{{ head }}</a></li>
+                <li><a href='{{ url('/' + repo.name + '/log/' + head|string) }}' class='dropdown-item'>{{ head }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -26,8 +29,8 @@
         </div>
     </div>
     <ul class='list-group'>
-        {% if head %}
-        {% for obj in head.iter_commits() %}
+        {% if commits %}
+        {% for obj in commits %}
         <li class='list-group-item'>
             <a href='{{ url('/' + repo.name + '/commit/' + obj|string) }}'>{{ obj.message }}<div class='ms-auto' style='font-size:0.7rem'>{{obj|string}}</div></a>
         </li>

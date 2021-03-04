@@ -2,7 +2,7 @@
 {% block content %}
 <div class='container mt-4 mb-4'>
     <h1>{{repo.name}}</h1>
-    <div>{{repo.owner.name}}</div>
+    <div>{{repo.owner.object.name}}</div>
     {% block repo %}
     {% endblock %}
 </div>

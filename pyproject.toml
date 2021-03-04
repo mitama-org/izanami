@@ -7,7 +7,7 @@ authors = ["boke0 <speken00.tt@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 GitPython = "^3.1.13"
-mitama = "^4.2.9"
+mitama = "^4.3.3"
 docker = "^4.4.4"
 invoke = "^1.5.0"
 fabric = "^2.6.0"

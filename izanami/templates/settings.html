@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class='container'>
+    <h2 class='mb-4'>設定</h2>
+    <form method='POST'>
+        <table class='table mb-4'>
+            <tr>
+                <th>{{ permission.name }}</th>
+                {% for role in roles %}
+                <th>
+                    {{ role.name }}
+                </th>
+                {% endfor %}
+            </tr>
+        {% for permission in permissions %}
+            <tr>
+                <th>{{ permission.name }}</th>
+                {% for role in roles %}
+                <td>
+                    <div class='form-check'>
+                        <input
+                            class='form-check-input'
+                            id='role_{{role.screen_name}}_{{permission.screen_name}}'
+                            type='checkbox'
+                            name='role.{{role.screen_name}}'
+                            value='{{ permission.screen_name }}'
+                            {% if role in permission.roles %}checked{% endif %}
+                            />
+                    </div>
+                </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </table>
+        {{ forms.csrf(request) }}
+        <p>{{ error }}</p>
+        <button class='btn btn-primary'>更新</button>
+    </form>
+</div>
+{% endblock %}

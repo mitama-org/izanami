@@ -10,6 +10,9 @@
         <li class='nav-item'>
             <a class='nav-link active' href='{{ url('/' + repo.name + '/merge') }}'>マージ</a>
         </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
+        </li>
     </ul>
     <form method='POST'>
         <div class='container'>
@@ -41,8 +44,10 @@
         </div>
         <div class='mb-3'>
             <label class='form-label'>メッセージ</label>
-            <textarea name='message' class='form-control' rows='20'></textarea>
+            <textarea name='body' class='form-control' rows='20'></textarea>
         </div>
+        <p>{{ error }}</p>
+        {{ forms.csrf(request) }}
         <button class='btn btn-primary'>投稿</button>
     </form>
 {% endblock %}

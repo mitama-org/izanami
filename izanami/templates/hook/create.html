@@ -1,0 +1,29 @@
+{% extends "repo/base.html" %}
+{% block repo %}
+    <ul class='nav nav-tabs mt-3 mb-3'>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name) }}'>コード</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/merge') }}'>マージ</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link active' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
+        </li>
+    </ul>
+    <a href='{{ url('/' + repo.name + '/hook/' + name) }}' class='btn btn-primary'>戻る</a>
+    <form method='POST'>
+        <div class='mb-3'>
+            <label class='form-label'>フック名</label>
+            <input type='text' class='form-control' name='name' value='{{ name }}'/>
+        </div>
+        <div class='mb-3'>
+            <textarea class='form-control' rows='20' name='code'>{{code}}</textarea>
+        </div>
+        {{ forms.csrf(request) }}
+        <button class='btn btn-primary'>保存</button>
+    </form>
+{% endblock %}

@@ -1,8 +1,8 @@
 from mitama.app import Controller
 from mitama.app.http import Response
-from mitama.models import User, Group
-from .model import Repo, Merge
-from .forms import HookUpdateForm, HookCreateForm
+from mitama.models import User, Group, Role, Node, is_admin
+from .model import Repo, Merge, InnerPermission
+from .forms import MergeCreateForm, SettingsForm
 from . import gitHttpBackend
 
 import git
@@ -32,7 +32,7 @@ class RepoController(Controller):
                 body = request.post()
                 repo = Repo()
                 repo.name = body['name']
-                repo.owner = body['owner']
+                repo.owner = Node(body['owner'])
                 repo.create()
                 if not (self.app.project_dir / 'git_template').is_dir:
                     git.Repo.init(
@@ -61,12 +61,14 @@ class RepoController(Controller):
     def update(self, request):
         template = self.view.get_template("repo/update.html")
         repo = Repo.retrieve(name = request.params['repo'])
+        if isinstance(repo.owner.object, Group) and not InnerPermission.is_accepted('update_repository', repo.owner.object, request.user):
+            return Response.redirect(self.app.convert_url('/'))
         try:
             if request.method == 'POST':
                 body = request.post()
                 name = repo.name
                 repo.name = body['name']
-                repo.owner = body['owner']
+                repo.owner = Node(body['owner'])
                 repo.update()
                 os.rename(
                     self.app.project_dir / ('repos/' + name + '.git'),
@@ -85,6 +87,8 @@ class RepoController(Controller):
     def delete(self, request):
         template = self.view.get_template("repo/delete.html")
         repo = Repo.retrieve(name = request.params['repo'])
+        if isinstance(repo.owner.object, Group) and not InnerPermission.is_accepted('delete_repository', repo.owner.object, request.user):
+            return Response.redirect(self.app.convert_url('/'))
         try:
             if request.method == 'POST':
                 if not request.user.password_check(request.post()['password']):
@@ -180,12 +184,87 @@ class RepoController(Controller):
         repo = Repo.retrieve(name = request.params['repo'])
         current_head = request.params.get('head', 'master')
         query = request.query
-        head = getattr(repo.entity.heads, current_head) if hasattr(repo.entity.heads, current_head) else None
+        commits = repo.entity.iter_commits(current_head) if hasattr(repo.entity.heads, current_head) else None
         return Response.render(template, {
             'repo': repo,
             'entity': repo.entity,
             'current_head': current_head,
-            'head': head
+            'commits': commits
+        })
+
+class HookController(Controller):
+    def handle(self, request):
+        template = self.view.get_template('hook/list.html')
+        repo = Repo.retrieve(name = request.params['repo'])
+        hooks = list()
+        for hook in glob.glob(str(self.app.project_dir / 'repos/{}.git/hooks'.format(repo.name)) + '/*'):
+            print(hook)
+            hooks.append(os.path.basename(hook))
+        return Response.render(template, {
+            'repo': repo,
+            'hooks': hooks
+        })
+    def retrieve(self, request):
+        template = self.view.get_template('hook/retrieve.html')
+        repo = Repo.retrieve(name = request.params['repo'])
+        with open(self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, request.params['hook'])) as f:
+            code = f.read()
+        return Response.render(template, {
+            'repo': repo,
+            'name': request.params['hook'],
+            'code': code
+        })
+    def create(self, request):
+        template = self.view.get_template('hook/create.html')
+        repo = Repo.retrieve(name = request.params['repo'])
+        if isinstance(repo.owner.object, Group) and not InnerPermission.is_accepted('update_repository', repo.owner.object, request.user):
+            return Response.redirect(self.app.convert_url('/' + request.params['repo'] + '/hook'))
+        error = ''
+        if request.method == 'POST':
+            form = HookCreateForm(request.post())
+            with open(self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, form['name']), 'w') as f:
+                f.write(form['code'])
+            return Response.redirect(self.app.convert_url('/{}/hooks/{}'.format(repo.name, form['name'])))
+        return Response.render(template, {
+            'repo': repo,
+            'error': error
+        })
+    def update(self, request):
+        template = self.view.get_template('hook/update.html')
+        repo = Repo.retrieve(name = request.params['repo'])
+        if isinstance(repo.owner.object, Group) and not InnerPermission.is_accepted('update_repository', repo.owner.object, request.user):
+            return Response.redirect(self.app.convert_url('/' + request.params['repo'] + '/hook'))
+        error = ''
+        if request.method == 'POST':
+            form = HookCreateForm(request.post())
+            os.move(
+                self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, request.params['hook']),
+                self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, form['name'])
+            )
+            with open(self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, form['name']), 'w') as f:
+                f.write(form['code'])
+            return Response.redirect(self.app.convert_url('/{}/hooks/{}'.format(repo.name, form['name'])))
+        with open(self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, request.params['hook'])) as f:
+            code = f.read()
+        return Response.render(template, {
+            'repo': repo,
+            'name': request.params['hook'],
+            'code': code,
+            'error': error
+        })
+    def delete(self, request):
+        template = self.view.get_template('hook/delete.html')
+        repo = Repo.retrieve(name = request.params['repo'])
+        if isinstance(repo.owner.object, Group) and not InnerPermission.is_accepted('update_repository', repo.owner.object, request.user):
+            return Response.redirect(self.app.convert_url('/' + request.params['repo'] + '/hook'))
+        error = ''
+        if request.method == 'POST':
+            os.remove(self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, request.params['hook']))
+            return Response.redirect(self.app.convert_url('/{}/hook'.format(repo.name)))
+        return Response.render(template, {
+            'repo': repo,
+            'name': request.params['hook'],
+            'error': error
         })
 
 class MergeController(Controller):
@@ -211,6 +290,7 @@ class MergeController(Controller):
                 merge.title = form['title']
                 merge.body = form['body']
                 merge.repo = repo
+                merge.user = request.user
                 merge.create()
                 return Response.redirect(self.app.convert_url('/' + repo.name + '/merge/' + merge._id))
             except Exception as err:
@@ -225,6 +305,14 @@ class MergeController(Controller):
         template = self.view.get_template('merge/retrieve.html')
         repo = Repo.retrieve(name = request.params['repo'])
         merge = Merge.retrieve(request.params['merge'])
+        if request.method == 'POST':
+            post = request.post()
+            if post['action'] == 'merge':
+                merge.merge()
+                merge.delete()
+            else:
+                merge.delete()
+            return Response.redirect(self.app.convert_url('/' + repo.name))
         return Response.render(template, {
             "repo": repo,
             "entity": repo.entity,
@@ -234,7 +322,7 @@ class MergeController(Controller):
 class ProxyController(Controller):
     def handle(self, request):
         repo = Repo.retrieve(name = request.params['repo'][:-4])
-        if repo.owner._id != request.user._id and (isinstance(repo.owner, Group) and not repo.owner.is_in(request.user)):
+        if repo.owner.object._id != request.user._id and (isinstance(repo.owner, Group) and not repo.owner.object.is_in(request.user)):
             return Response(status=401, reason='Unauthorized', text='You are not the owner of the repository.')
         environ = dict(request.environ)
         environ['REQUEST_METHOD'] = request.method
@@ -253,3 +341,28 @@ class ProxyController(Controller):
             headers = headers,
             content_type = content_type
         )
+
+class SettingController(Controller):
+    def handle(self, request):
+        if not is_admin(request.user):
+            return Response.redirect(self.app.convert_url('/'))
+        error = ""
+        if request.method == "POST":
+            try:
+                form = SettingsForm(request.post())
+                for role_screen_name, role_permissions in form['role'].items():
+                    role = Role.retrieve(screen_name = role_screen_name)
+                    for permission in [InnerPermission.retrieve(screen_name = permission) for permission in role_permissions]:
+                        permission.roles.append(role)
+                        permission.update()
+                error = "変更を保存しました"
+            except Exception as err:
+                error = str(err)
+        template = self.view.get_template('settings.html')
+        return Response.render(template, {
+            "roles": Role.list(),
+            "permissions": InnerPermission.list(),
+            "error": error
+        })
+
+

@@ -4,8 +4,8 @@ from mitama.utils.middlewares import BasicMiddleware, SessionMiddleware, CsrfMid
 from mitama.app.method import view
 
 #from .controller import RepoController, ProxyController, HookController
-from .controller import RepoController, ProxyController, MergeController
-from .model import Repo, Merge
+from .controller import RepoController, ProxyController, HookController, MergeController, SettingController
+from .model import Repo, Merge, Permission
 
 
 class App(App):
@@ -21,17 +21,8 @@ class App(App):
             Router([
                 view("/", RepoController),
                 view("/create", RepoController, 'create'),
-                #view("/hook", HookController),
-                #view("/hook/create", HookController, 'create'),
-                #view("/hook/<hook>", HookController, 'retrieve'),
-                #view("/hook/<hook>/edit", HookController, 'update'),
-                #view("/hook/<hook>/delete", HookController, 'delete'),
+                view("/settings", SettingController),
                 view("/<repo>", RepoController, 'retrieve'),
-                #view("/<repo>/hook", RepoController, 'hook_list'),
-                #view("/<repo>/hook/create", RepoController, 'hook_create'),
-                #view("/<repo>/hook/<hook>", RepoController, 'hook_retrieve'),
-                #view("/<repo>/hook/<hook>/edit", RepoController, 'hook_update'),
-                #view("/<repo>/hook/<hook>/delete", RepoController, 'hook_delete'),
                 view("/<repo>/update", RepoController, 'update'),
                 view("/<repo>/delete", RepoController, 'delete'),
                 view("/<repo>/tree/<head>", RepoController, 'retrieve'),
@@ -42,9 +33,22 @@ class App(App):
                 view("/<repo>/merge", MergeController),
                 view("/<repo>/merge/create", MergeController, 'create'),
                 view("/<repo>/merge/<merge>", MergeController, 'retrieve'),
+                view("/<repo>/hook", HookController),
+                view("/<repo>/hook/create", HookController, 'create'),
+                view("/<repo>/hook/<hook>", HookController, 'retrieve'),
+                view("/<repo>/hook/<hook>/edit", HookController, 'update'),
+                view("/<repo>/hook/<hook>/delete", HookController, 'delete'),
             ], middlewares = [SessionMiddleware, CsrfMiddleware])
         ]
     )
 
     def init_app(self):
         Repo.project_dir = self.project_dir
+
+    @property
+    def view(self):
+        view = super().view
+        view.globals.update(
+            permission=Permission.is_accepted,
+        )
+        return view

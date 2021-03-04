@@ -1,0 +1,35 @@
+{% extends "repo/base.html" %}
+{% block repo %}
+    <ul class='nav nav-tabs mt-3 mb-3'>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name) }}'>コード</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/merge') }}'>マージ</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link active' href='{{ url('/' + repo.name + '/action') }}'>アクション</a>
+        </li>
+    </ul>
+    <a href='{{ url('/' + repo.name + '/action/create') }}' class='btn btn-primary'>アクションを発動する</a>
+    <div class='card'>
+        <div class='card-body'>
+            <h5>Log</h5>
+            <pre><code id='log'></code></pre>
+        </div>
+    </div>
+    <script>
+      window.onload = () => {
+        var output = document.getElementById('log');
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '{{ url('/' + repo.name + '/action/' + action.id + '/raw') }}', true);
+        xhr.send();
+        setInterval(function() {
+          output.textContent = xhr.responseText;
+        }, 500);
+      }
+    </script>
+{% endblock %}

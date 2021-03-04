@@ -2,17 +2,33 @@
 {% block repo %}
     <ul class='nav nav-tabs mt-3 mb-3'>
         <li class='nav-item'>
-            <a class='nav-link active' href='{{ url('/' + repo.name) }}'>コード</a>
+            <a class='nav-link' href='{{ url('/' + repo.name) }}'>コード</a>
         </li>
         <li class='nav-item'>
             <a class='nav-link' href='{{ url('/' + repo.name + '/log') }}'>ログ</a>
         </li>
         <li class='nav-item'>
-            <a class='nav-link' href='{{ url('/' + repo.name + '/merge') }}'>マージ</a>
+            <a class='nav-link active' href='{{ url('/' + repo.name + '/merge') }}'>マージ</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
         </li>
     </ul>
-    <div class='card'>
+    <div class='mb-3'>
+        {{ lists.userItem(merge.user) }}
+    </div>
+    <div class='card mb-3'>
         <div class='card-body'>
+            <p class='text-secondary' style='font-size:0.8rem'><strong>{{ merge.base }}</strong> ← <strong>{{ merge.compare }}</strong></p>
+            <h4 class='card-title mb-3'>{{ merge.title }}</h4>
+            {{ merge.body|markdown }}
         </div>
     </div>
+    {% if permission('merge', request.user) %}
+    <form method='POST'>
+        {{ forms.csrf(request) }}
+        <button class='btn btn-primary' name='action' value='merge'>マージ</button>
+        <button class='btn btn-secondary' name='action' value='cancel'>却下</button>
+    </form>
+    {% endif %}
 {% endblock %}
