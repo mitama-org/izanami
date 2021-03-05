@@ -5,7 +5,7 @@ from mitama.app.method import view
 
 #from .controller import RepoController, ProxyController, HookController
 from .controller import RepoController, ProxyController, HookController, MergeController, SettingController
-from .model import Repo, Merge, Permission
+from .model import Repo, Merge, InnerPermission
 
 
 class App(App):
@@ -49,6 +49,6 @@ class App(App):
     def view(self):
         view = super().view
         view.globals.update(
-            permission=Permission.is_accepted,
+            permission=InnerPermission.is_accepted,
         )
         return view

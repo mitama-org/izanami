@@ -197,7 +197,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "importlib-resources"
-version = "5.1.1"
+version = "5.1.2"
 description = "Read resources from Python packages"
 category = "main"
 optional = false
@@ -288,7 +288,7 @@ python-versions = "*"
 
 [[package]]
 name = "mitama"
-version = "4.4.0"
+version = "4.4.2"
 description = ""
 category = "main"
 optional = false
@@ -683,7 +683,7 @@ six = "*"
 
 [[package]]
 name = "xmlschema"
-version = "1.5.1"
+version = "1.5.2"
 description = "An XML Schema validator and decoder"
 category = "main"
 optional = false
@@ -695,6 +695,7 @@ elementpath = ">=2.1.2,<3.0.0"
 [package.extras]
 codegen = ["elementpath (>=2.1.2,<3.0.0)", "jinja2"]
 dev = ["tox", "coverage", "lxml", "elementpath (>=2.1.2,<3.0.0)", "memory-profiler", "sphinx", "sphinx-rtd-theme", "jinja2"]
+docs = ["elementpath (>=2.1.2,<3.0.0)", "sphinx", "sphinx-rtd-theme", "jinja2"]
 
 [[package]]
 name = "yarl"
@@ -823,8 +824,8 @@ idna = [
     {file = "idna-2.10.tar.gz", hash = "sha256:b307872f855b18632ce0c21c5e45be78c0ea7ae4c15c828c20788b26921eb3f6"},
 ]
 importlib-resources = [
-    {file = "importlib_resources-5.1.1-py3-none-any.whl", hash = "sha256:67bcf65e7b9f7f2ea54a342254c7e87607819955469034bc581fae26e1743306"},
-    {file = "importlib_resources-5.1.1.tar.gz", hash = "sha256:563c5579cd40a7d5c6256ea6519b510152b6968103ab540b9771a50093a09056"},
+    {file = "importlib_resources-5.1.2-py3-none-any.whl", hash = "sha256:ebab3efe74d83b04d6bf5cd9a17f0c5c93e60fb60f30c90f56265fce4682a469"},
+    {file = "importlib_resources-5.1.2.tar.gz", hash = "sha256:642586fc4740bd1cad7690f836b3321309402b20b332529f25617ff18e8e1370"},
 ]
 invoke = [
     {file = "invoke-1.5.0-py2-none-any.whl", hash = "sha256:da7c2d0be71be83ffd6337e078ef9643f41240024d6b2659e7b46e0b251e339f"},
@@ -906,8 +907,8 @@ mccabe = [
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
 mitama = [
-    {file = "mitama-4.4.0-py3-none-any.whl", hash = "sha256:13a7a8362e92475aba9a916893231cdb55d719e7bb7a9f68828cfcc633517b88"},
-    {file = "mitama-4.4.0.tar.gz", hash = "sha256:282dbb09d1c94bc993dfd035caa7b1bc12e506fd9156ea840b1b1cbf850c3e7e"},
+    {file = "mitama-4.4.2-py3-none-any.whl", hash = "sha256:40774f28265ab5030b27474d603bb8941ce72b8a309a1d521cf48e5caa45f0cb"},
+    {file = "mitama-4.4.2.tar.gz", hash = "sha256:1ee305180693d97b695a3b79e54519b76bd3d94f38f3fccce371b67bc4bd1d3b"},
 ]
 multidict = [
     {file = "multidict-5.1.0-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:b7993704f1a4b204e71debe6095150d43b2ee6150fa4f44d6d966ec356a8d61f"},
@@ -1307,8 +1308,8 @@ websocket-client = [
     {file = "websocket_client-0.58.0.tar.gz", hash = "sha256:63509b41d158ae5b7f67eb4ad20fecbb4eee99434e73e140354dc3ff8e09716f"},
 ]
 xmlschema = [
-    {file = "xmlschema-1.5.1-py3-none-any.whl", hash = "sha256:e8825ac7074df365f18bc8864242bb3672bc62f19ffc49ad3253113e7e6291f5"},
-    {file = "xmlschema-1.5.1.tar.gz", hash = "sha256:c4c72b457865f46394bb23525b4e233d6537d9e97b8c6144a6cda2d5ef0d6688"},
+    {file = "xmlschema-1.5.2-py3-none-any.whl", hash = "sha256:df7bf5d6d23f5f32d50e573f9ad75a2456029009909b63607560916b0584f89e"},
+    {file = "xmlschema-1.5.2.tar.gz", hash = "sha256:f821ce780f84c7e61ca1ccf32f23aec400446e74fa5cc888450af7604ce2291f"},
 ]
 yarl = [
     {file = "yarl-1.6.3-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:0355a701b3998dcd832d0dc47cc5dedf3874f966ac7f870e0f3a6788d802d434"},

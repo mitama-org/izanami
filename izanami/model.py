@@ -15,7 +15,7 @@ db = Database(prefix="izanami")
 
 class Repo(db.Model):
     name = Column(String(64), primary_key=True, unique=True)
-    owner = relation(Node)
+    owner = relationship(Node)
     owner_id = Column(String(64), ForeignKey("mitama_node._id"))
     @property
     def entity(self):
@@ -82,11 +82,11 @@ InnerPermission = inner_permission(db, [
     },
     {
         "name": "リポジトリの削除",
-        "screen_name": "remove_repository"
+        "screen_name": "delete_repository"
     },
     {
         "name": "リポジトリの設定",
-        "screen_name": "remove_repository"
+        "screen_name": "update_repository"
     }
 ])
 

@@ -7,6 +7,8 @@ class MergeCreateForm(Form):
     compare = Field(label='マージ対象', required=True)
 
 class SettingsForm(Form):
-    role = DictField(listed=True)
+    permission = DictField(listed=True)
 
-
+class HookCreateForm(Form):
+    name = Field(label="フック名", required=True)
+    code = Field(label="コード")

@@ -1,8 +1,8 @@
 from mitama.app import Controller
 from mitama.app.http import Response
-from mitama.models import User, Group, Role, Node, is_admin
+from mitama.models import User, Group, InnerRole, Node, is_admin
 from .model import Repo, Merge, InnerPermission
-from .forms import MergeCreateForm, SettingsForm
+from .forms import MergeCreateForm, SettingsForm, HookCreateForm
 from . import gitHttpBackend
 
 import git
@@ -10,6 +10,7 @@ import os
 import glob
 import shutil
 import yaml
+import traceback
 from io import StringIO
 from unidiff import PatchSet
 
@@ -32,7 +33,7 @@ class RepoController(Controller):
                 body = request.post()
                 repo = Repo()
                 repo.name = body['name']
-                repo.owner = Node(body['owner'])
+                repo.owner = Node.retrieve(body['owner'])
                 repo.create()
                 if not (self.app.project_dir / 'git_template').is_dir:
                     git.Repo.init(
@@ -47,7 +48,7 @@ class RepoController(Controller):
                 return Response.redirect(self.app.convert_url('/'+repo.name))
         except Exception as err:
             error = str(err)
-            print(error)
+            traceback.print_exc(err)
             return Response.render(template, {
                 'post': body,
                 'error': error,
@@ -198,7 +199,6 @@ class HookController(Controller):
         repo = Repo.retrieve(name = request.params['repo'])
         hooks = list()
         for hook in glob.glob(str(self.app.project_dir / 'repos/{}.git/hooks'.format(repo.name)) + '/*'):
-            print(hook)
             hooks.append(os.path.basename(hook))
         return Response.render(template, {
             'repo': repo,
@@ -224,7 +224,7 @@ class HookController(Controller):
             form = HookCreateForm(request.post())
             with open(self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, form['name']), 'w') as f:
                 f.write(form['code'])
-            return Response.redirect(self.app.convert_url('/{}/hooks/{}'.format(repo.name, form['name'])))
+            return Response.redirect(self.app.convert_url('/{}/hook/{}'.format(repo.name, form['name'])))
         return Response.render(template, {
             'repo': repo,
             'error': error
@@ -237,13 +237,13 @@ class HookController(Controller):
         error = ''
         if request.method == 'POST':
             form = HookCreateForm(request.post())
-            os.move(
+            shutil.move(
                 self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, request.params['hook']),
                 self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, form['name'])
             )
             with open(self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, form['name']), 'w') as f:
                 f.write(form['code'])
-            return Response.redirect(self.app.convert_url('/{}/hooks/{}'.format(repo.name, form['name'])))
+            return Response.redirect(self.app.convert_url('/{}/hook/{}'.format(repo.name, form['name'])))
         with open(self.app.project_dir / 'repos/{}.git/hooks/{}'.format(repo.name, request.params['hook'])) as f:
             code = f.read()
         return Response.render(template, {
@@ -350,17 +350,16 @@ class SettingController(Controller):
         if request.method == "POST":
             try:
                 form = SettingsForm(request.post())
-                for role_screen_name, role_permissions in form['role'].items():
-                    role = Role.retrieve(screen_name = role_screen_name)
-                    for permission in [InnerPermission.retrieve(screen_name = permission) for permission in role_permissions]:
-                        permission.roles.append(role)
-                        permission.update()
+                for permission_screen_name, permission_roles in form['permission'].items():
+                    permission = InnerPermission.retrieve(screen_name = permission_screen_name)
+                    permission.roles = [InnerRole.retrieve(screen_name = role) for role in permission_roles]
+                    permission.update()
                 error = "変更を保存しました"
             except Exception as err:
                 error = str(err)
         template = self.view.get_template('settings.html')
         return Response.render(template, {
-            "roles": Role.list(),
+            "roles": InnerRole.list(),
             "permissions": InnerPermission.list(),
             "error": error
         })
