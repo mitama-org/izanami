@@ -11,7 +11,7 @@ from .model import Repo, Merge, InnerPermission
 class App(App):
     name = 'Izanami'
     description = 'Git server for Mitama.'
-    merge = [Repo, Merge]
+    merge = [Repo, Merge, InnerPermission]
     router = Router(
         [
             view("/static/<path:path>", static_files()),
