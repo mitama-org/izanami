@@ -57,6 +57,14 @@ class Merge(db.Model):
         self.repo.merge(self.base, self.compare)
         self.on("merge")()
 
+    @property
+    def diff(self):
+        entity = self.repo.entity
+        diff_str = entity.git.diff(self.base, self.compare, ignore_blank_lines=True, ignore_space_at_eol=True) if len(commit.parents) > 0 else None
+        diff = PatchSet(diff_str)
+        return diff
+
+
 Merge.listen("merge")
 
 InnerPermission = inner_permission(db, [

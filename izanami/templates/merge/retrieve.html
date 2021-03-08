@@ -14,17 +14,17 @@
             <a class='nav-link' href='{{ url('/' + repo.name + '/hook') }}'>フック</a>
         </li>
     </ul>
-    <div class='mb-3'>
-        {{ lists.userItem(merge.user) }}
-    </div>
     <div class='card mb-3'>
         <div class='card-body'>
             <p class='text-secondary' style='font-size:0.8rem'><strong>{{ merge.base }}</strong> ← <strong>{{ merge.compare }}</strong></p>
             <h4 class='card-title mb-3'>{{ merge.title }}</h4>
+            <div class='mb-4'>
+                {{ lists.userItem(merge.user, small=True) }}
+            </div>
             {{ merge.body|markdown }}
         </div>
     </div>
-    {% if permission('merge', request.user) %}
+    {% if repo.owner.object == request.user or permission('merge', repo.owner, request.user) %}
     <form method='POST'>
         {{ forms.csrf(request) }}
         <button class='btn btn-primary' name='action' value='merge'>マージ</button>
