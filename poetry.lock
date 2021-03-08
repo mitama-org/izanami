@@ -374,7 +374,7 @@ python-versions = "*"
 
 [[package]]
 name = "mitama"
-version = "4.5.12"
+version = "4.5.20"
 description = ""
 category = "main"
 optional = false
@@ -1136,8 +1136,7 @@ mccabe = [
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
 mitama = [
-    {file = "mitama-4.5.12-py3-none-any.whl", hash = "sha256:34e91978132d1190bbc2a908931b824b6c83a8def16f7c96e9382a5805ae4eee"},
-    {file = "mitama-4.5.12.tar.gz", hash = "sha256:7417c3185be320d30d9cc49cf48a6a3bf206f195225e56bd9d91d46e4dbe30fc"},
+    {file = "mitama-4.5.20-py3-none-any.whl", hash = "sha256:297e74e7fe7daf747b69fc8bae6962f13e518effd086cdbf1319bc2735ff00f3"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
