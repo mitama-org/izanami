@@ -10,7 +10,7 @@ python-versions = "*"
 name = "bcrypt"
 version = "3.2.0"
 description = "Modern password hashing for your software and your servers"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -57,7 +57,7 @@ python-versions = "*"
 name = "cffi"
 version = "1.14.5"
 description = "Foreign Function Interface for Python calling C code."
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -84,7 +84,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 name = "cryptography"
 version = "3.4.6"
 description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -111,7 +111,7 @@ python-versions = ">=3.6, <3.7"
 name = "defusedxml"
 version = "0.7.1"
 description = "XML bomb protection for Python stdlib modules"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
@@ -137,7 +137,7 @@ tls = ["pyOpenSSL (>=17.5.0)", "cryptography (>=1.3.4)", "idna (>=2.0.0)"]
 name = "elementpath"
 version = "2.2.0"
 description = "XPath 1.0/2.0 parsers and selectors for ElementTree and lxml"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -162,7 +162,7 @@ pyflakes = ">=2.2.0,<2.3.0"
 name = "gevent"
 version = "21.1.2"
 description = "Coroutine-based network library"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
 
@@ -183,7 +183,7 @@ test = ["dnspython (>=1.16.0,<2.0)", "idna", "requests", "objgraph", "cffi (>=1.
 name = "gevent-websocket"
 version = "0.10.1"
 description = "Websocket handler for the gevent pywsgi server, a Python network library"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -216,7 +216,7 @@ gitdb = ">=4.0.1,<5"
 name = "greenlet"
 version = "1.0.0"
 description = "Lightweight in-process concurrent programming"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
 
@@ -227,7 +227,7 @@ docs = ["sphinx"]
 name = "http-ece"
 version = "1.1.0"
 description = "Encrypted Content Encoding for HTTP"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -246,7 +246,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 name = "importlib-metadata"
 version = "3.7.2"
 description = "Read metadata from Python packages"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -262,7 +262,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 name = "importlib-resources"
 version = "5.1.2"
 description = "Read resources from Python packages"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -290,7 +290,7 @@ colors = ["colorama (>=0.4.3,<0.5.0)"]
 name = "jinja-markdown"
 version = "1.200630"
 description = "A jinja2 markdown tag powered with PyMdown Extensions."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6,<4.0"
 
@@ -307,7 +307,7 @@ testing = ["pytest"]
 name = "jinja2"
 version = "2.11.3"
 description = "A very fast and expressive template engine."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
@@ -321,7 +321,7 @@ i18n = ["Babel (>=0.8)"]
 name = "markdown"
 version = "3.3.4"
 description = "Python implementation of Markdown."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -335,7 +335,7 @@ testing = ["coverage", "pyyaml"]
 name = "markupsafe"
 version = "1.1.1"
 description = "Safely add untrusted strings to HTML/XML markup."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
 
@@ -349,9 +349,9 @@ python-versions = "*"
 
 [[package]]
 name = "mitama"
-version = "4.5.20"
+version = "4.5.21"
 description = ""
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6,<4.0"
 
@@ -393,7 +393,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 name = "pillow"
 version = "8.1.2"
 description = "Python Imaging Library (Fork)"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -401,7 +401,7 @@ python-versions = ">=3.6"
 name = "py-vapid"
 version = "1.7.1"
 description = "Simple VAPID header generation library"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -420,7 +420,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 name = "pycparser"
 version = "2.20"
 description = "C parser in Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
@@ -428,7 +428,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 name = "pycryptodome"
 version = "3.10.1"
 description = "Cryptographic library for Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
@@ -444,7 +444,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 name = "pygments"
 version = "2.6.1"
 description = "Pygments is a syntax highlighting package written in Python."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.5"
 
@@ -452,7 +452,7 @@ python-versions = ">=3.5"
 name = "pyjwt"
 version = "2.0.1"
 description = "JSON Web Token implementation in Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -466,7 +466,7 @@ tests = ["pytest (>=6.0.0,<7.0.0)", "coverage[toml] (==5.0.4)"]
 name = "pymdown-extensions"
 version = "7.1"
 description = "Extension pack for Python Markdown."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
 
@@ -477,7 +477,7 @@ Markdown = ">=3.2"
 name = "pyopenssl"
 version = "20.0.1"
 description = "Python wrapper module around the OpenSSL library"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
 
@@ -493,7 +493,7 @@ test = ["flaky", "pretend", "pytest (>=3.0.1)"]
 name = "pysaml2"
 version = "6.5.1"
 description = "Python implementation of SAML Version 2 Standard"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "<4,>=3.6"
 
@@ -515,7 +515,7 @@ s2repoze = ["paste", "zope.interface", "repoze.who"]
 name = "python-dateutil"
 version = "2.8.1"
 description = "Extensions to the standard Python datetime module"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 
@@ -526,7 +526,7 @@ six = ">=1.5"
 name = "python-magic"
 version = "0.4.22"
 description = "File type identification using libmagic"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
@@ -534,7 +534,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 name = "pytz"
 version = "2021.1"
 description = "World timezone definitions, modern and historical"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -542,7 +542,7 @@ python-versions = "*"
 name = "pywebpush"
 version = "1.11.0"
 description = "WebPush publication library"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -614,7 +614,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 name = "sqlalchemy"
 version = "1.3.23"
 description = "Database Abstraction Library"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
@@ -650,7 +650,7 @@ python-versions = "*"
 name = "typing-extensions"
 version = "3.7.4.3"
 description = "Backported and Experimental Type Hints for Python 3.5+"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -658,7 +658,7 @@ python-versions = "*"
 name = "tzlocal"
 version = "2.1"
 description = "tzinfo object for the local timezone"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -698,7 +698,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 name = "uwsgi"
 version = "2.0.19.1"
 description = "The uWSGI server"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -706,7 +706,7 @@ python-versions = "*"
 name = "watchdog"
 version = "2.0.2"
 description = "Filesystem events monitoring"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -728,7 +728,7 @@ six = "*"
 name = "xmlschema"
 version = "1.5.2"
 description = "An XML Schema validator and decoder"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -744,7 +744,7 @@ docs = ["elementpath (>=2.1.2,<3.0.0)", "sphinx", "sphinx-rtd-theme", "jinja2"]
 name = "zipp"
 version = "3.4.1"
 description = "Backport of pathlib-compatible object wrapper for zip files"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -756,7 +756,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 name = "zope.event"
 version = "4.5.0"
 description = "Very basic event publishing system"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -768,7 +768,7 @@ test = ["zope.testrunner"]
 name = "zope.interface"
 version = "5.2.0"
 description = "Interfaces for Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
@@ -780,7 +780,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "b854b0871d1642d8fcef32c256c04ba07f8b10854cc0b7b5a799f4ba57a8f388"
+content-hash = "3af3bd8ebc62b47273349539d92d3faa7ed407e265c20f2d3466f78771ed0705"
 
 [metadata.files]
 appdirs = [
@@ -1056,7 +1056,7 @@ mccabe = [
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
 mitama = [
-    {file = "mitama-4.5.20-py3-none-any.whl", hash = "sha256:297e74e7fe7daf747b69fc8bae6962f13e518effd086cdbf1319bc2735ff00f3"},
+    {file = "mitama-4.5.21-py3-none-any.whl", hash = "sha256:ed99452526d756e14574f1bbe67d15fd88f013bf2ac3a61a2ce3fd63781e525e"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},

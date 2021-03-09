@@ -15,12 +15,12 @@ include = [
 [tool.poetry.dependencies]
 python = "^3.6"
 GitPython = "^3.1.13"
-mitama = "^4.5.20"
 docker = "^4.4.4"
 PyYAML = "^5.4.1"
 unidiff = "^0.6.0"
 
 [tool.poetry.dev-dependencies]
+mitama = "^4.5.20"
 unittest = "^0.0"
 flake8 = "^3.8.4"
 isort = "^5.7.0"
