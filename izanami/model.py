@@ -1,10 +1,11 @@
 from mitama.db import BaseDatabase, relationship
-from mitama.db.types import *
-from mitama.models import inner_permission, Role, User, Node
+from mitama.db.types import Column, String, Text, ForeignKey
+from mitama.models import inner_permission, User, Node
+from unidiff import PatchSet
+import markdown
 import git
 import hashlib
 import shutil
-import asyncio
 
 
 class Database(BaseDatabase):
@@ -13,16 +14,19 @@ class Database(BaseDatabase):
 
 db = Database(prefix="izanami")
 
+
 class Repo(db.Model):
     name = Column(String(64), primary_key=True, unique=True)
     owner = relationship(Node)
     owner_id = Column(String(64), ForeignKey("mitama_node._id"))
+
     @property
     def entity(self):
         entity = git.Repo(
             self.project_dir / 'repos/{}.git'.format(self.name),
         )
         return entity
+
     def merge(self, source, target):
         dirname = hashlib.sha256()
         dirname.update(self.name.encode())
@@ -34,19 +38,25 @@ class Repo(db.Model):
             self.project_dir / 'tmp/{}'.format(dirname),
             branch=source
         )
-        repo.index.merge_tree('origin/' + target).commit("Merged into {}".format(source))
+        repo.index.merge_tree(
+            'origin/' + target
+        ).commit(
+            "Merged into {}".format(source)
+        )
         repo.remotes.origin.push()
         shutil.rmtree(self.project_dir / 'tmp/{}'.format(dirname))
+
 
 class Merge(db.Model):
     repo_id = Column(String(64), ForeignKey("izanami_repo._id"))
     repo = relationship(Repo)
     base = Column(String(255), nullable=False)
     compare = Column(String(255), nullable=False)
-    body = Column(String(1000))
+    body = Column(Text)
     title = Column(String(255))
     user_id = Column(String(64), ForeignKey("mitama_user._id"))
     user = relationship(User)
+
     @property
     def meta(self):
         md = markdown.Metadata(extensions=["meta"])
@@ -55,12 +65,17 @@ class Merge(db.Model):
 
     def merge(self):
         self.repo.merge(self.base, self.compare)
-        self.on("merge")()
+        self.event["merge"]()
 
     @property
     def diff(self):
         entity = self.repo.entity
-        diff_str = entity.git.diff(self.base, self.compare, ignore_blank_lines=True, ignore_space_at_eol=True) if len(commit.parents) > 0 else None
+        diff_str = entity.git.diff(
+            self.base,
+            self.compare,
+            ignore_blank_lines=True,
+            ignore_space_at_eol=True
+        )
         diff = PatchSet(diff_str)
         return diff
 

@@ -1,10 +1,20 @@
 from mitama.app import App, Router
 from mitama.utils.controllers import static_files
-from mitama.utils.middlewares import BasicMiddleware, SessionMiddleware, CsrfMiddleware
+from mitama.utils.middlewares import (
+    BasicMiddleware,
+    SessionMiddleware,
+    CsrfMiddleware
+)
 from mitama.app.method import view
 
-#from .controller import RepoController, ProxyController, HookController
-from .controller import RepoController, ProxyController, HookController, MergeController, SettingController
+# from .controller import RepoController, ProxyController, HookController
+from .controller import (
+    RepoController,
+    ProxyController,
+    HookController,
+    MergeController,
+    SettingController
+)
 from .model import Repo, Merge, InnerPermission
 
 
@@ -17,7 +27,7 @@ class App(App):
             view("/static/<path:path>", static_files()),
             Router([
                 view("/<repo:re:(.*)\.git><path:path>", ProxyController),
-            ], middlewares = [BasicMiddleware]),
+            ], middlewares=[BasicMiddleware]),
             Router([
                 view("/", RepoController),
                 view("/create", RepoController, 'create'),
@@ -38,7 +48,7 @@ class App(App):
                 view("/<repo>/hook/<hook>", HookController, 'retrieve'),
                 view("/<repo>/hook/<hook>/edit", HookController, 'update'),
                 view("/<repo>/hook/<hook>/delete", HookController, 'delete'),
-            ], middlewares = [SessionMiddleware, CsrfMiddleware])
+            ], middlewares=[SessionMiddleware, CsrfMiddleware])
         ]
     )
 
