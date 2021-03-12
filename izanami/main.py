@@ -6,6 +6,7 @@ from mitama.utils.middlewares import (
     CsrfMiddleware
 )
 from mitama.app.method import view
+from git.objects.blob import Blob
 
 # from .controller import RepoController, ProxyController, HookController
 from .controller import (
@@ -16,6 +17,10 @@ from .controller import (
     SettingController
 )
 from .model import Repo, Merge, InnerPermission
+
+
+def isblob(obj):
+    return isinstance(obj, Blob)
 
 
 class App(App):
@@ -59,6 +64,7 @@ class App(App):
     def view(self):
         view = super().view
         view.globals.update(
+            isblob=isblob,
             permission=InnerPermission.is_accepted,
         )
         return view

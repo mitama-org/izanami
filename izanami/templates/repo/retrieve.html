@@ -32,7 +32,11 @@
         {% if tree %}
         {% for obj in tree %}
         <li class='list-group-item'>
+            {% if isblob(obj) %}
             <a href='{{ url('/' + repo.name + '/blob/' + current_head + '/' + obj.name) }}'>{{ obj.name }}</a>
+            {% else %}
+            <a href='{{ url('/' + repo.name + '/tree/' + obj.path) }}'>{{ obj.path }}</a>
+            {% endif %}
         </li>
         {% endfor %}
         {% endif %}
