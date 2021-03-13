@@ -1,6 +1,7 @@
 from mitama.app import Controller
 from mitama.app.http import Response
 from mitama.models import User, Group, InnerRole, Node, is_admin
+from pathlib import Path
 from .model import Repo, Merge, InnerPermission
 from .forms import MergeCreateForm, SettingsForm, HookCreateForm
 from . import gitHttpBackend
@@ -160,30 +161,34 @@ class RepoController(Controller):
     def blob(self, request):
         template = self.view.get_template("repo/blob.html")
         repo = Repo.retrieve(name=request.params['repo'])
-        query = request.query
-        branch = query.get('branch', 'master')
+        head = request.params.get('head', 'master')
         entity = git.Repo(
             self.app.project_dir / 'repos/{}.git'.format(repo.name),
         )
-        head = getattr(
+        current_head = getattr(
             entity.heads,
-            branch
+            head
         ) if hasattr(
             entity.heads,
-            branch
+            head
         ) else None
-        tree = head.commit.tree or None
-        content = None
-        for obj in tree:
-            if obj.name == request.params['object']:
-                content = obj.data_stream.read().decode("utf-8")
+        tree = current_head.commit.tree or None
+        data = tree / request.params['object']
+        content = (
+            data.data_stream.read().decode("utf-8")
+            if isinstance(data, git.objects.blob.Blob)
+            else None
+        )
+        above = Path("/" + request.params['object']) / '../'
+        print(above.resolve())
         return Response.render(template, {
             'repo': repo,
-            'branch': branch,
-            'head': head,
+            'current_head': head,
             'tree': tree,
             'entity': entity,
             'name': request.params['object'],
+            'data': data,
+            'above': str(above.resolve()),
             'content': content
         })
 

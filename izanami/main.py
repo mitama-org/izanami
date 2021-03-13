@@ -41,7 +41,7 @@ class App(App):
                 view("/<repo>/update", RepoController, 'update'),
                 view("/<repo>/delete", RepoController, 'delete'),
                 view("/<repo>/tree/<head>", RepoController, 'retrieve'),
-                view("/<repo>/blob/<head>/<object>", RepoController, 'blob'),
+                view("/<repo>/blob/<head>/<object:path>", RepoController, 'blob'),
                 view("/<repo>/commit/<commit>", RepoController, 'commit'),
                 view("/<repo>/log", RepoController, 'log'),
                 view("/<repo>/log/<head>", RepoController, 'log'),
