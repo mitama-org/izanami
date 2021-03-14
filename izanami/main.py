@@ -31,7 +31,7 @@ class App(App):
         [
             view("/static/<path:path>", static_files()),
             Router([
-                view("/<repo:re:(.*)\.git><path:path>", ProxyController),
+                view("/<repo:re:(.*)\.git>/<path:path>", ProxyController),
             ], middlewares=[BasicMiddleware]),
             Router([
                 view("/", RepoController),
