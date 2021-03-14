@@ -180,7 +180,11 @@ class RepoController(Controller):
             else None
         )
         above = Path("/" + request.params['object']) / '../'
-        print(above.resolve())
+        readme = None
+        if isinstance(data, git.objects.tree.Tree):
+            for blob in data:
+                if blob.name.startswith('README'):
+                    readme = blob.data_stream.read().decode('utf-8')
         return Response.render(template, {
             'repo': repo,
             'current_head': head,
@@ -189,7 +193,8 @@ class RepoController(Controller):
             'name': request.params['object'],
             'data': data,
             'above': str(above.resolve()),
-            'content': content
+            'content': content,
+            'readme': readme
         })
 
     def commit(self, request):
